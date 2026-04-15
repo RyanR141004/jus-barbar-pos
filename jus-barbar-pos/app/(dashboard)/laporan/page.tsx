@@ -77,7 +77,7 @@ export default function LaporanPage() {
     if (!data) return;
 
     const grouped: Record<string, { total_qty: number; total_revenue: number }> = {};
-    (data as Array<{
+    (data as unknown as Array<{
       quantity: number;
       subtotal: number;
       products: { name: string } | null;
