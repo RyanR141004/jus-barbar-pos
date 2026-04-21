@@ -240,7 +240,7 @@ export default function PaymentModal({
             <div className="animate-fade-in">
               <div className="bg-white rounded-2xl p-6 flex flex-col items-center gap-3 relative overflow-hidden">
                 <Image 
-                  src="/qris.jpg" 
+                  src="/barcode-pembayaran.jpeg" 
                   alt="QRIS Jus Bar Bar" 
                   width={200} 
                   height={200} 
