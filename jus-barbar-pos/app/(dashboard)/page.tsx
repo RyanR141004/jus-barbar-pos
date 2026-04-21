@@ -123,9 +123,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        </div>
       </div>
-
       {/* Recent transactions */}
       <div className="card p-5">
         <div className="flex items-center justify-between mb-4">
