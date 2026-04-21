@@ -7,6 +7,7 @@ import type { CartItem } from '@/types/database.types';
 
 interface PaymentModalProps {
   cartItems: CartItem[];
+  customerName: string;
   total: number;
   onConfirm: (method: 'CASH' | 'QRIS') => Promise<void>;
   onClose: () => void;
@@ -14,6 +15,7 @@ interface PaymentModalProps {
 
 export default function PaymentModal({
   cartItems,
+  customerName,
   total,
   onConfirm,
   onClose,
@@ -38,28 +40,85 @@ export default function PaymentModal({
 
   if (success) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-        <div className="card-glass p-8 max-w-sm w-full text-center animate-bounce-in">
-          <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="w-10 h-10 text-emerald-400" />
+      <>
+        {/* Modal Layar Sukses */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm print:hidden">
+          <div className="card-glass p-8 max-w-sm w-full text-center animate-bounce-in">
+            <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-10 h-10 text-emerald-400" />
+            </div>
+            <h3 className="text-xl font-bold text-white">Pembayaran Berhasil!</h3>
+            {method === 'CASH' && change > 0 && (
+              <p className="text-slate-400 mt-2 text-sm">
+                Kembalian:{' '}
+                <span className="text-white font-bold">{formatRupiah(change)}</span>
+              </p>
+            )}
+            <p className="text-emerald-400 text-sm mt-1">Transaksi tersimpan</p>
+            
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => window.print()}
+                className="flex-1 btn-secondary justify-center py-3 border border-slate-600 hover:border-slate-500"
+              >
+                🖨️ Cetak Struk
+              </button>
+              <button
+                id="btn-close-success"
+                onClick={onClose}
+                className="flex-1 btn-primary justify-center py-3"
+              >
+                Selesai
+              </button>
+            </div>
           </div>
-          <h3 className="text-xl font-bold text-white">Pembayaran Berhasil!</h3>
-          {method === 'CASH' && change > 0 && (
-            <p className="text-slate-400 mt-2 text-sm">
-              Kembalian:{' '}
-              <span className="text-white font-bold">{formatRupiah(change)}</span>
-            </p>
-          )}
-          <p className="text-emerald-400 text-sm mt-1">Stok telah diperbarui</p>
-          <button
-            id="btn-close-success"
-            onClick={onClose}
-            className="mt-6 w-full btn-primary justify-center"
-          >
-            Transaksi Baru
-          </button>
         </div>
-      </div>
+
+        {/* Layout Struk (Print Version) */}
+        <div id="printable-receipt-container" className="hidden print:block text-black bg-white p-2 text-xs font-mono">
+          <div className="text-center mb-4">
+            <h2 className="font-bold text-base">JUS BAR BAR</h2>
+            <p>Sistem Point of Sale</p>
+            <p>================================</p>
+          </div>
+          <div className="mb-2 uppercase">
+            <p>Tgl: {new Date().toLocaleString('id-ID')}</p>
+            <p>Plg: {customerName}</p>
+          </div>
+          <p>--------------------------------</p>
+          <div className="space-y-1 my-2">
+            {cartItems.map((item, i) => (
+              <div key={i}>
+                <p className="uppercase">{item.product.name}</p>
+                <div className="flex justify-between pl-2">
+                  <span>{item.quantity} x {formatRupiah(item.product.price)}</span>
+                  <span>{formatRupiah(item.product.price * item.quantity)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p>--------------------------------</p>
+          <div className="flex justify-between font-bold">
+            <span>TOTAL</span>
+            <span>{formatRupiah(total)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>BAYAR ({method})</span>
+            <span>{method === 'CASH' ? formatRupiah(Number(cashReceived)) : formatRupiah(total)}</span>
+          </div>
+          {method === 'CASH' && (
+            <div className="flex justify-between">
+              <span>KEMBALI</span>
+              <span>{formatRupiah(change)}</span>
+            </div>
+          )}
+          <p className="mt-2">================================</p>
+          <div className="text-center mt-4 uppercase">
+            <p>Terima Kasih Telah Berbelanja</p>
+            <p>Semoga Harimu Menyenangkan!</p>
+          </div>
+        </div>
+      </>
     );
   }
 

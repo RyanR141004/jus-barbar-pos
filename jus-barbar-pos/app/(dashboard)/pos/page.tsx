@@ -20,6 +20,7 @@ export default function POSPage() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showCart, setShowCart] = useState(false);
+  const [customerName, setCustomerName] = useState('');
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -52,7 +53,6 @@ export default function POSPage() {
     setCartItems((prev) => {
       const existing = prev.find((i) => i.product.id === product.id);
       if (existing) {
-        if (existing.quantity >= product.stock) return prev;
         return prev.map((i) =>
           i.product.id === product.id
             ? { ...i, quantity: i.quantity + 1 }
@@ -66,7 +66,7 @@ export default function POSPage() {
   const increaseQty = (productId: number) => {
     setCartItems((prev) =>
       prev.map((i) =>
-        i.product.id === productId && i.quantity < i.product.stock
+        i.product.id === productId
           ? { ...i, quantity: i.quantity + 1 }
           : i
       )
@@ -100,7 +100,7 @@ export default function POSPage() {
 
     const { data: transaction, error: trxError } = await supabase
       .from('transactions')
-      .insert({ total_price: total, payment_method: method })
+      .insert({ total_price: total, payment_method: method, customer_name: customerName })
       .select()
       .single();
 
@@ -133,6 +133,7 @@ export default function POSPage() {
   const handlePaymentClose = () => {
     setShowPaymentModal(false);
     clearCart();
+    setCustomerName('');
     fetchData();
     setShowCart(false);
   };
@@ -236,6 +237,8 @@ export default function POSPage() {
         <div className="w-full">
           <CartSidebar
             cartItems={cartItems}
+            customerName={customerName}
+            setCustomerName={setCustomerName}
             onIncrease={increaseQty}
             onDecrease={decreaseQty}
             onRemove={removeFromCart}
@@ -267,6 +270,8 @@ export default function POSPage() {
           <div className="absolute right-0 top-0 h-full w-80 sm:w-96 animate-slide-in">
             <CartSidebar
               cartItems={cartItems}
+              customerName={customerName}
+              setCustomerName={setCustomerName}
               onIncrease={increaseQty}
               onDecrease={decreaseQty}
               onRemove={removeFromCart}
@@ -284,6 +289,7 @@ export default function POSPage() {
       {showPaymentModal && (
         <PaymentModal
           cartItems={cartItems}
+          customerName={customerName}
           total={total}
           onConfirm={handlePaymentConfirm}
           onClose={handlePaymentClose}

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import ProductForm from '@/components/produk/ProductForm';
-import { formatRupiah, getStockStatus } from '@/lib/utils';
+import { formatRupiah } from '@/lib/utils';
 import {
   Plus,
   Pencil,
@@ -66,12 +66,6 @@ export default function ProdukPage() {
     p.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const stockSummary = {
-    good: products.filter((p) => p.stock > 10).length,
-    low: products.filter((p) => p.stock > 5 && p.stock <= 10).length,
-    critical: products.filter((p) => p.stock <= 5).length,
-  };
-
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Header */}
@@ -100,21 +94,6 @@ export default function ProdukPage() {
         </div>
       </div>
 
-      {/* Stock summary */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="card p-4 text-center">
-          <p className="text-2xl font-bold text-emerald-400">{stockSummary.good}</p>
-          <p className="text-slate-500 text-xs mt-1">Stok Aman</p>
-        </div>
-        <div className="card p-4 text-center">
-          <p className="text-2xl font-bold text-amber-400">{stockSummary.low}</p>
-          <p className="text-slate-500 text-xs mt-1">Stok Rendah</p>
-        </div>
-        <div className="card p-4 text-center">
-          <p className="text-2xl font-bold text-red-400">{stockSummary.critical}</p>
-          <p className="text-slate-500 text-xs mt-1">Kritis / Habis</p>
-        </div>
-      </div>
 
       {/* Search */}
       <div className="relative max-w-sm">
@@ -151,13 +130,11 @@ export default function ProdukPage() {
                   <th className="text-left py-3 px-4 font-medium">Produk</th>
                   <th className="text-left py-3 px-4 font-medium hidden sm:table-cell">Kategori</th>
                   <th className="text-right py-3 px-4 font-medium">Harga</th>
-                  <th className="text-center py-3 px-4 font-medium">Stok</th>
                   <th className="text-center py-3 px-4 font-medium">Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((product) => {
-                  const status = getStockStatus(product.stock);
                   return (
                     <tr
                       key={product.id}
@@ -195,21 +172,6 @@ export default function ProdukPage() {
                       {/* Price */}
                       <td className="py-3 px-4 text-right font-semibold text-white">
                         {formatRupiah(product.price)}
-                      </td>
-
-                      {/* Stock */}
-                      <td className="py-3 px-4 text-center">
-                        <span
-                          className={
-                            status === 'good'
-                              ? 'badge-success'
-                              : status === 'low'
-                              ? 'badge-warning'
-                              : 'badge-danger'
-                          }
-                        >
-                          {product.stock <= 0 ? 'Habis' : `${product.stock} unit`}
-                        </span>
                       </td>
 
                       {/* Actions */}

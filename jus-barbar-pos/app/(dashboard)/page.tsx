@@ -35,14 +35,6 @@ export default async function DashboardPage() {
     todayTransactions?.reduce((sum, t) => sum + t.total_price, 0) ?? 0;
   const todayCount = todayTransactions?.length ?? 0;
 
-  // Fetch low stock products
-  const { data: lowStockProducts } = await supabase
-    .from('products')
-    .select('id, name, stock')
-    .lte('stock', 10)
-    .order('stock', { ascending: true })
-    .limit(5);
-
   // Fetch recent transactions
   const { data: recentTransactions } = await supabase
     .from('transactions')
@@ -68,7 +60,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Revenue */}
         <div className="stat-card">
           <div className="flex items-center justify-between">
@@ -93,20 +85,9 @@ export default async function DashboardPage() {
           <p className="text-slate-500 text-xs">Transaksi hari ini</p>
         </div>
 
-        {/* Low stock alert */}
-        <div className="stat-card">
-          <div className="flex items-center justify-between">
-            <span className="text-slate-400 text-sm font-medium">Stok Rendah</span>
-            <div className="w-9 h-9 bg-amber-500/10 rounded-xl flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 text-amber-400" />
-            </div>
-          </div>
-          <p className="text-2xl font-bold text-white">{lowStockProducts?.length ?? 0}</p>
-          <p className="text-slate-500 text-xs">Produk perlu restok</p>
-        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         {/* Quick actions */}
         <div className="card p-5">
           <h3 className="font-semibold text-white mb-4">Aksi Cepat</h3>
@@ -142,37 +123,6 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Low stock list */}
-        <div className="card p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-white">Stok Hampir Habis</h3>
-            <Link href="/produk" className="text-orange-400 hover:text-orange-300 text-xs font-medium">
-              Kelola stok →
-            </Link>
-          </div>
-          {!lowStockProducts || lowStockProducts.length === 0 ? (
-            <div className="text-center py-6">
-              <p className="text-slate-500 text-sm">Semua stok aman ✓</p>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {lowStockProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="flex items-center justify-between p-3 bg-slate-800 rounded-xl"
-                >
-                  <span className="text-slate-200 text-sm font-medium">{product.name}</span>
-                  <span
-                    className={
-                      product.stock <= 5 ? 'badge-danger animate-pulse-red' : 'badge-warning'
-                    }
-                  >
-                    {product.stock} unit
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 

@@ -1,11 +1,13 @@
 'use client';
 
-import { Plus, Minus, Trash2, ShoppingCart, CreditCard } from 'lucide-react';
+import { Plus, Minus, Trash2, ShoppingCart, CreditCard, User } from 'lucide-react';
 import { formatRupiah } from '@/lib/utils';
 import type { CartItem } from '@/types/database.types';
 
 interface CartSidebarProps {
   cartItems: CartItem[];
+  customerName: string;
+  setCustomerName: (name: string) => void;
   onIncrease: (productId: number) => void;
   onDecrease: (productId: number) => void;
   onRemove: (productId: number) => void;
@@ -15,6 +17,8 @@ interface CartSidebarProps {
 
 export default function CartSidebar({
   cartItems,
+  customerName,
+  setCustomerName,
   onIncrease,
   onDecrease,
   onRemove,
@@ -30,7 +34,7 @@ export default function CartSidebar({
   return (
     <div className="flex flex-col h-full bg-slate-900 border-l border-slate-800">
       {/* Header */}
-      <div className="p-5 border-b border-slate-800">
+      <div className="p-5 border-b border-slate-800 space-y-4">
         <div className="flex items-center gap-2">
           <ShoppingCart className="w-5 h-5 text-orange-400" />
           <h2 className="font-bold text-white">Keranjang</h2>
@@ -39,6 +43,19 @@ export default function CartSidebar({
               {itemCount}
             </span>
           )}
+        </div>
+        
+        {/* Customer Name Input */}
+        <div className="relative">
+          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Nama Pembeli (Wajib)"
+            value={customerName}
+            onChange={(e) => setCustomerName(e.target.value)}
+            className="input-field pl-9 py-2 text-sm bg-slate-950"
+            required
+          />
         </div>
       </div>
 
@@ -89,8 +106,7 @@ export default function CartSidebar({
                   <button
                     id={`btn-increase-${item.product.id}`}
                     onClick={() => onIncrease(item.product.id)}
-                    disabled={item.quantity >= item.product.stock}
-                    className="w-7 h-7 bg-orange-500 hover:bg-orange-600 disabled:bg-slate-700 disabled:cursor-not-allowed rounded-lg flex items-center justify-center transition-colors"
+                    className="w-7 h-7 bg-orange-500 hover:bg-orange-600 rounded-lg flex items-center justify-center transition-colors"
                   >
                     <Plus className="w-3 h-3 text-white" />
                   </button>
@@ -114,7 +130,7 @@ export default function CartSidebar({
         <button
           id="btn-checkout"
           onClick={onCheckout}
-          disabled={cartItems.length === 0 || isProcessing}
+          disabled={cartItems.length === 0 || isProcessing || !customerName.trim()}
           className="w-full btn-primary justify-center py-3.5 glow-orange disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
         >
           <CreditCard className="w-4 h-4" />

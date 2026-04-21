@@ -8,7 +8,6 @@ export type Product = {
   id: number;
   name: string;
   price: number;
-  stock: number;
   category_id: number | null;
   image_url: string | null;
   created_at: string;
@@ -17,6 +16,7 @@ export type Product = {
 
 export type Transaction = {
   id: string;
+  customer_name: string;
   total_price: number;
   payment_method: 'CASH' | 'QRIS';
   created_at: string;

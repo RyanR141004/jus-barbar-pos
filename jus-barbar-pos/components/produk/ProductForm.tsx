@@ -24,7 +24,6 @@ export default function ProductForm({
 
   const [name, setName] = useState(product?.name ?? '');
   const [price, setPrice] = useState(String(product?.price ?? ''));
-  const [stock, setStock] = useState(String(product?.stock ?? ''));
   const [categoryId, setCategoryId] = useState(String(product?.category_id ?? ''));
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState(product?.image_url ?? '');
@@ -70,7 +69,6 @@ export default function ProductForm({
     const payload = {
       name: name.trim(),
       price: Number(price),
-      stock: Number(stock),
       category_id: categoryId ? Number(categoryId) : null,
       image_url: imageUrl,
     };
@@ -163,34 +161,19 @@ export default function ProductForm({
             />
           </div>
 
-          {/* Price & Stock */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label htmlFor="product-price" className="label">Harga (Rp) <span className="text-red-400">*</span></label>
-              <input
-                id="product-price"
-                type="number"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder="15000"
-                className="input-field"
-                min="0"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="product-stock" className="label">Stok Awal <span className="text-red-400">*</span></label>
-              <input
-                id="product-stock"
-                type="number"
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-                placeholder="50"
-                className="input-field"
-                min="0"
-                required
-              />
-            </div>
+          {/* Price */}
+          <div>
+            <label htmlFor="product-price" className="label">Harga (Rp) <span className="text-red-400">*</span></label>
+            <input
+              id="product-price"
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="15000"
+              className="input-field"
+              min="0"
+              required
+            />
           </div>
 
           {/* Category */}
