@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { X, Banknote, QrCode, CheckCircle, Loader2 } from 'lucide-react';
+import Image from 'next/image';
 import { formatRupiah } from '@/lib/utils';
 import type { CartItem } from '@/types/database.types';
 
@@ -234,12 +235,18 @@ export default function PaymentModal({
             </div>
           )}
 
-          {/* QRIS placeholder */}
+          {/* QRIS placeholder / Real QRIS */}
           {method === 'QRIS' && (
             <div className="animate-fade-in">
-              <div className="bg-white rounded-2xl p-6 flex flex-col items-center gap-3">
-                <QrCode className="w-32 h-32 text-slate-800" />
-                <p className="text-slate-600 text-xs text-center font-medium">
+              <div className="bg-white rounded-2xl p-6 flex flex-col items-center gap-3 relative overflow-hidden">
+                <Image 
+                  src="/qris.jpg" 
+                  alt="QRIS Jus Bar Bar" 
+                  width={200} 
+                  height={200} 
+                  className="rounded-lg shadow-sm"
+                />
+                <p className="text-slate-600 text-xs text-center font-medium mt-2">
                   Scan QR Code ini untuk membayar
                 </p>
                 <p className="text-slate-800 font-bold text-lg">{formatRupiah(total)}</p>
