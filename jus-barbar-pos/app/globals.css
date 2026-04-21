@@ -133,12 +133,19 @@ body {
 }
 
 @media print {
-  body > *:not(#printable-receipt-container) {
-    display: none !important;
+  /* Set all parts of the page to hidden */
+  body * {
+    visibility: hidden;
   }
   
+  /* Make only the receipt and its children visible */
+  #printable-receipt-container,
+  #printable-receipt-container * {
+    visibility: visible;
+  }
+  
+  /* Position the receipt at the top left */
   #printable-receipt-container {
-    display: block !important;
     position: absolute;
     left: 0;
     top: 0;
