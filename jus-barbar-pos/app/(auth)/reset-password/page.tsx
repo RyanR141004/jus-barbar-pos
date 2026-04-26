@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Eye, EyeOff, Loader2, GlassWater, CheckCircle, KeyRound } from "lucide-react";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
@@ -35,17 +35,16 @@ export default function ResetPasswordPage() {
 
       // Cara 2: Implicit flow — token ada di URL hash fragment (#access_token=...)
       // Supabase client otomatis mendeteksi hash dan membuat sesi
-      // Kita dengarkan event PASSWORD_RECOVERY
       const { data: { subscription } } = supabase.auth.onAuthStateChange(
         async (event, session) => {
-          if (event === "PASSWORD_RECOVERY" && session) {
+          if ((event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") && session) {
             setValidSession(true);
             setChecking(false);
           }
         }
       );
 
-      // Cek juga apakah sudah ada sesi aktif (jika sudah ter-exchange sebelumnya)
+      // Cek juga apakah sudah ada sesi aktif
       const { data } = await supabase.auth.getSession();
       if (data.session) {
         setValidSession(true);
@@ -250,5 +249,21 @@ export default function ResetPasswordPage() {
         Jus Bar Bar POS © {new Date().getFullYear()}
       </p>
     </div>
+  );
+}
+
+// Wrapper dengan Suspense agar tidak error saat pre-rendering di Vercel
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full max-w-md flex flex-col items-center justify-center py-20 gap-4">
+          <Loader2 className="w-8 h-8 text-orange-400 animate-spin" />
+          <p className="text-slate-400 text-sm">Memuat halaman...</p>
+        </div>
+      }
+    >
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
