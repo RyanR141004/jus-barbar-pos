@@ -4,16 +4,83 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* ==============================
+   THEME VARIABLES
+   ============================== */
+
+/* Mode Gelap (Default) */
+:root,
+[data-theme='dark'] {
   --brand-primary: #f97316;
-  --brand-dark: #0f172a;
-  --brand-darker: #020617;
   --sidebar-width: 240px;
+
+  --bg-body: #020617;
+  --bg-main: #0f172a;
+  --bg-card: #0f172a;
+  --bg-card-border: #1e293b;
+  --bg-card-glass: rgba(30, 41, 59, 0.5);
+  --bg-card-glass-border: rgba(51, 65, 85, 0.5);
+  --bg-input: #1e293b;
+  --bg-input-border: #334155;
+  --bg-sidebar: #0f172a;
+  --bg-header: rgba(15, 23, 42, 0.8);
+  --bg-hover: #1e293b;
+  --bg-overlay: rgba(0, 0, 0, 0.6);
+  --bg-table-head: rgba(30, 41, 59, 0.5);
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --text-dim: #475569;
+  --text-input: #f1f5f9;
+  --text-placeholder: #94a3b8;
+
+  --border-main: #1e293b;
+  --border-light: rgba(30, 41, 59, 0.5);
+
+  --scrollbar-thumb: #334155;
+
+  --btn-secondary-bg: #334155;
+  --btn-secondary-hover: #475569;
+  --btn-secondary-active: #64748b;
+}
+
+/* Mode Terang */
+[data-theme='light'] {
+  --bg-body: #f8fafc;
+  --bg-main: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-border: #e2e8f0;
+  --bg-card-glass: rgba(255, 255, 255, 0.7);
+  --bg-card-glass-border: rgba(203, 213, 225, 0.5);
+  --bg-input: #f1f5f9;
+  --bg-input-border: #cbd5e1;
+  --bg-sidebar: #ffffff;
+  --bg-header: rgba(255, 255, 255, 0.85);
+  --bg-hover: #f1f5f9;
+  --bg-overlay: rgba(0, 0, 0, 0.3);
+  --bg-table-head: #f1f5f9;
+
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
+  --text-input: #0f172a;
+  --text-placeholder: #94a3b8;
+
+  --border-main: #e2e8f0;
+  --border-light: rgba(203, 213, 225, 0.5);
+
+  --scrollbar-thumb: #cbd5e1;
+
+  --btn-secondary-bg: #e2e8f0;
+  --btn-secondary-hover: #cbd5e1;
+  --btn-secondary-active: #94a3b8;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #334155 transparent;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -26,16 +93,17 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #334155;
+  background-color: var(--scrollbar-thumb);
   border-radius: 3px;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #020617;
-  color: #f1f5f9;
+  background-color: var(--bg-body);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @layer components {
@@ -44,7 +112,21 @@ body {
   }
 
   .btn-secondary {
-    @apply bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-white font-semibold px-4 py-2.5 rounded-xl transition-all duration-150 flex items-center gap-2;
+    font-weight: 600;
+    padding: 0.625rem 1rem;
+    border-radius: 0.75rem;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--btn-secondary-bg);
+    color: var(--text-primary);
+  }
+  .btn-secondary:hover {
+    background-color: var(--btn-secondary-hover);
+  }
+  .btn-secondary:active {
+    background-color: var(--btn-secondary-active);
   }
 
   .btn-danger {
@@ -52,23 +134,56 @@ body {
   }
 
   .card {
-    @apply bg-slate-900 border border-slate-800 rounded-2xl;
+    background-color: var(--bg-card);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 1rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
   .card-glass {
-    @apply bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl;
+    background-color: var(--bg-card-glass);
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--bg-card-glass-border);
+    border-radius: 1rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
   .input-field {
-    @apply w-full bg-slate-800 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all;
+    width: 100%;
+    background-color: var(--bg-input);
+    border: 1px solid var(--bg-input-border);
+    color: var(--text-input);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    outline: none;
+  }
+  .input-field::placeholder {
+    color: var(--text-placeholder);
+  }
+  .input-field:focus {
+    box-shadow: 0 0 0 2px #f97316;
+    border-color: transparent;
   }
 
   .label {
-    @apply block text-sm font-medium text-slate-300 mb-1.5;
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.375rem;
   }
 
   .stat-card {
-    @apply card p-5 flex flex-col gap-2;
+    background-color: var(--bg-card);
+    border: 1px solid var(--bg-card-border);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
   .badge-success {
@@ -84,11 +199,32 @@ body {
   }
 
   .nav-item {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-all duration-150 font-medium text-sm;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.15s;
+  }
+  .nav-item:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-hover);
   }
 
   .nav-item-active {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-white bg-orange-500/10 font-medium text-sm border border-orange-500/20;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    background-color: rgba(249, 115, 22, 0.1);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+    color: #f97316;
   }
 }
 

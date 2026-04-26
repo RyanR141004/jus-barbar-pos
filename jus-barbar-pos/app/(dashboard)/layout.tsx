@@ -12,7 +12,7 @@ export default function DashboardLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-950">
+    <div className="flex h-screen overflow-hidden" style={{ backgroundColor: 'var(--bg-main)' }}>
       {/* Desktop Sidebar */}
       <div className="hidden lg:flex lg:flex-col lg:w-60 lg:flex-shrink-0">
         <Sidebar />
@@ -24,7 +24,7 @@ export default function DashboardLayout({
           className="fixed inset-0 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         >
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="absolute inset-0 backdrop-blur-sm" style={{ backgroundColor: 'var(--bg-overlay)' }} />
         </div>
       )}
 

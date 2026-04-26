@@ -26,22 +26,29 @@ export default function Sidebar({ onClose }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex flex-col h-full bg-slate-900 border-r border-slate-800">
+    <aside
+      className="flex flex-col h-full"
+      style={{ backgroundColor: 'var(--bg-sidebar)', borderRight: '1px solid var(--border-main)' }}
+    >
       {/* Logo */}
-      <div className="flex items-center justify-between p-5 border-b border-slate-800">
+      <div
+        className="flex items-center justify-between p-5"
+        style={{ borderBottom: '1px solid var(--border-main)' }}
+      >
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/30 flex-shrink-0">
             <GlassWater className="w-5 h-5 text-white" />
           </div>
           <div>
-            <p className="font-bold text-white text-sm leading-tight">Jus Bar Bar</p>
-            <p className="text-slate-500 text-xs">Point of Sale</p>
+            <p className="font-bold text-sm leading-tight" style={{ color: 'var(--text-primary)' }}>Jus Bar Bar</p>
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Point of Sale</p>
           </div>
         </div>
         {onClose && (
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors lg:hidden"
+            className="transition-colors lg:hidden"
+            style={{ color: 'var(--text-muted)' }}
           >
             <X className="w-5 h-5" />
           </button>
@@ -76,8 +83,8 @@ export default function Sidebar({ onClose }: SidebarProps) {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-slate-800">
-        <p className="text-xs text-slate-600 text-center">v1.0.0</p>
+      <div className="p-4" style={{ borderTop: '1px solid var(--border-main)' }}>
+        <p className="text-xs text-center" style={{ color: 'var(--text-dim)' }}>v1.0.0</p>
       </div>
     </aside>
   );

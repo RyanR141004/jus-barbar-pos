@@ -3,7 +3,6 @@ import { formatRupiah } from '@/lib/utils';
 import {
   TrendingUp,
   ShoppingBag,
-  AlertTriangle,
   ArrowRight,
   ShoppingCart,
 } from 'lucide-react';
@@ -46,10 +45,10 @@ export default async function DashboardPage() {
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Greeting */}
       <div>
-        <h2 className="text-2xl font-bold text-white">
+        <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
           Selamat Datang 👋
         </h2>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
           {today.toLocaleDateString('id-ID', {
             weekday: 'long',
             day: 'numeric',
@@ -64,25 +63,25 @@ export default async function DashboardPage() {
         {/* Revenue */}
         <div className="stat-card">
           <div className="flex items-center justify-between">
-            <span className="text-slate-400 text-sm font-medium">Omzet Hari Ini</span>
+            <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Omzet Hari Ini</span>
             <div className="w-9 h-9 bg-orange-500/10 rounded-xl flex items-center justify-center">
               <TrendingUp className="w-5 h-5 text-orange-400" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-white">{formatRupiah(todayRevenue)}</p>
-          <p className="text-slate-500 text-xs">{todayCount} transaksi selesai</p>
+          <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{formatRupiah(todayRevenue)}</p>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{todayCount} transaksi selesai</p>
         </div>
 
         {/* Transactions */}
         <div className="stat-card">
           <div className="flex items-center justify-between">
-            <span className="text-slate-400 text-sm font-medium">Total Transaksi</span>
+            <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Total Transaksi</span>
             <div className="w-9 h-9 bg-blue-500/10 rounded-xl flex items-center justify-center">
               <ShoppingBag className="w-5 h-5 text-blue-400" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-white">{todayCount}</p>
-          <p className="text-slate-500 text-xs">Transaksi hari ini</p>
+          <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{todayCount}</p>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Transaksi hari ini</p>
         </div>
 
       </div>
@@ -90,7 +89,7 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 gap-6">
         {/* Quick actions */}
         <div className="card p-5">
-          <h3 className="font-semibold text-white mb-4">Aksi Cepat</h3>
+          <h3 className="font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Aksi Cepat</h3>
           <div className="space-y-3">
             <Link
               href="/pos"
@@ -109,16 +108,17 @@ export default async function DashboardPage() {
             <Link
               href="/laporan"
               id="btn-goto-laporan"
-              className="flex items-center justify-between p-4 bg-slate-800 hover:bg-slate-700 rounded-xl transition-all group"
+              className="flex items-center justify-between p-4 rounded-xl transition-all group"
+              style={{ backgroundColor: 'var(--bg-hover)' }}
             >
               <div className="flex items-center gap-3">
-                <TrendingUp className="w-5 h-5 text-slate-300" />
+                <TrendingUp className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
                 <div>
-                  <p className="font-semibold text-white text-sm">Lihat Laporan</p>
-                  <p className="text-slate-400 text-xs">Tren & statistik</p>
+                  <p className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Lihat Laporan</p>
+                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Tren & statistik</p>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" style={{ color: 'var(--text-muted)' }} />
             </Link>
           </div>
         </div>
@@ -127,7 +127,7 @@ export default async function DashboardPage() {
       {/* Recent transactions */}
       <div className="card p-5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-white">Transaksi Terakhir</h3>
+          <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Transaksi Terakhir</h3>
           <Link href="/laporan" className="text-orange-400 hover:text-orange-300 text-xs font-medium">
             Lihat semua →
           </Link>
@@ -141,7 +141,7 @@ export default async function DashboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-slate-500 border-b border-slate-800">
+                <tr style={{ color: 'var(--text-muted)', borderBottom: '1px solid var(--border-main)' }}>
                   <th className="text-left py-2 px-3 font-medium">ID</th>
                   <th className="text-left py-2 px-3 font-medium">Waktu</th>
                   <th className="text-left py-2 px-3 font-medium">Metode</th>
@@ -152,12 +152,13 @@ export default async function DashboardPage() {
                 {recentTransactions.map((trx) => (
                   <tr
                     key={trx.id}
-                    className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors"
+                    className="transition-colors"
+                    style={{ borderBottom: '1px solid var(--border-light)' }}
                   >
-                    <td className="py-3 px-3 text-slate-400 font-mono text-xs">
+                    <td className="py-3 px-3 font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
                       #{trx.id.slice(0, 8)}
                     </td>
-                    <td className="py-3 px-3 text-slate-300">
+                    <td className="py-3 px-3" style={{ color: 'var(--text-secondary)' }}>
                       {new Date(trx.created_at).toLocaleTimeString('id-ID', {
                         hour: '2-digit',
                         minute: '2-digit',
@@ -174,7 +175,7 @@ export default async function DashboardPage() {
                         {trx.payment_method === 'CASH' ? 'Tunai' : 'QRIS'}
                       </span>
                     </td>
-                    <td className="py-3 px-3 text-right font-semibold text-white">
+                    <td className="py-3 px-3 text-right font-semibold" style={{ color: 'var(--text-primary)' }}>
                       {formatRupiah(trx.total_price)}
                     </td>
                   </tr>
