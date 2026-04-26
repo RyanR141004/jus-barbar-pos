@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Eye, EyeOff, Loader2, GlassWater, CheckCircle, KeyRound } from "lucide-react";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
 
   const [password, setPassword] = useState("");
@@ -20,16 +21,53 @@ export default function ResetPasswordPage() {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    // Cek apakah user punya session valid dari link reset password
-    const checkSession = async () => {
+    const handleAuthFromUrl = async () => {
+      // Cara 1: PKCE flow — ada ?code=xxx di URL
+      const code = searchParams.get("code");
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (!error) {
+          setValidSession(true);
+          setChecking(false);
+          return;
+        }
+      }
+
+      // Cara 2: Implicit flow — token ada di URL hash fragment (#access_token=...)
+      // Supabase client otomatis mendeteksi hash dan membuat sesi
+      // Kita dengarkan event PASSWORD_RECOVERY
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          if (event === "PASSWORD_RECOVERY" && session) {
+            setValidSession(true);
+            setChecking(false);
+          }
+        }
+      );
+
+      // Cek juga apakah sudah ada sesi aktif (jika sudah ter-exchange sebelumnya)
       const { data } = await supabase.auth.getSession();
       if (data.session) {
         setValidSession(true);
+        setChecking(false);
+        subscription.unsubscribe();
+        return;
       }
-      setChecking(false);
+
+      // Jika setelah 5 detik tidak ada sesi, tandai tidak valid
+      const timeout = setTimeout(() => {
+        setChecking(false);
+        subscription.unsubscribe();
+      }, 5000);
+
+      return () => {
+        clearTimeout(timeout);
+        subscription.unsubscribe();
+      };
     };
-    checkSession();
-  }, [supabase]);
+
+    handleAuthFromUrl();
+  }, [searchParams, supabase]);
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,9 +84,7 @@ export default function ResetPasswordPage() {
     }
 
     setLoading(true);
-
     const { error } = await supabase.auth.updateUser({ password });
-
     setLoading(false);
 
     if (error) {
@@ -57,8 +93,6 @@ export default function ResetPasswordPage() {
     }
 
     setSuccess(true);
-
-    // Redirect ke login setelah 3 detik
     setTimeout(() => {
       router.push("/login");
     }, 3000);
@@ -66,8 +100,9 @@ export default function ResetPasswordPage() {
 
   if (checking) {
     return (
-      <div className="w-full max-w-md flex items-center justify-center py-20">
-        <Loader2 className="w-6 h-6 text-orange-400 animate-spin" />
+      <div className="w-full max-w-md flex flex-col items-center justify-center py-20 gap-4">
+        <Loader2 className="w-8 h-8 text-orange-400 animate-spin" />
+        <p className="text-slate-400 text-sm">Memverifikasi link reset...</p>
       </div>
     );
   }
@@ -86,7 +121,6 @@ export default function ResetPasswordPage() {
       {/* Card */}
       <div className="card-glass p-8">
         {success ? (
-          /* Tampilan sukses */
           <div className="text-center space-y-4 animate-fade-in">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-500/10 rounded-full mx-auto">
               <CheckCircle className="w-8 h-8 text-emerald-400" />
@@ -94,12 +128,11 @@ export default function ResetPasswordPage() {
             <div>
               <h2 className="text-xl font-semibold text-white">Kata Sandi Diperbarui!</h2>
               <p className="text-slate-400 text-sm mt-2">
-                Kata sandi Anda berhasil diubah. Anda akan diarahkan ke halaman login dalam 3 detik...
+                Berhasil! Anda akan diarahkan ke halaman login dalam 3 detik...
               </p>
             </div>
           </div>
         ) : !validSession ? (
-          /* Tampilan link tidak valid */
           <div className="text-center space-y-4">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-red-500/10 rounded-full mx-auto">
               <KeyRound className="w-8 h-8 text-red-400" />
@@ -118,7 +151,6 @@ export default function ResetPasswordPage() {
             </button>
           </div>
         ) : (
-          /* Form reset password */
           <>
             <div className="mb-6">
               <h2 className="text-xl font-semibold text-white">Buat Kata Sandi Baru</h2>
@@ -128,11 +160,8 @@ export default function ResetPasswordPage() {
             </div>
 
             <form onSubmit={handleReset} className="space-y-4">
-              {/* Password Baru */}
               <div>
-                <label htmlFor="new-password" className="label">
-                  Kata Sandi Baru
-                </label>
+                <label htmlFor="new-password" className="label">Kata Sandi Baru</label>
                 <div className="relative">
                   <input
                     id="new-password"
@@ -154,11 +183,8 @@ export default function ResetPasswordPage() {
                 </div>
               </div>
 
-              {/* Konfirmasi Password */}
               <div>
-                <label htmlFor="confirm-password" className="label">
-                  Konfirmasi Kata Sandi
-                </label>
+                <label htmlFor="confirm-password" className="label">Konfirmasi Kata Sandi</label>
                 <div className="relative">
                   <input
                     id="confirm-password"
@@ -194,14 +220,12 @@ export default function ResetPasswordPage() {
                 </div>
               )}
 
-              {/* Error */}
               {error && (
                 <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm px-4 py-3 rounded-xl">
                   {error}
                 </div>
               )}
 
-              {/* Submit */}
               <button
                 id="btn-reset-password"
                 type="submit"
