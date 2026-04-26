@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Eye, EyeOff, Loader2, GlassWater } from "lucide-react";
 
@@ -100,6 +101,15 @@ export default function LoginPage() {
                   <Eye className="w-5 h-5" />
                 )}
               </button>
+            </div>
+            {/* Lupa Kata Sandi */}
+            <div className="flex justify-end">
+              <Link
+                href="/forgot-password"
+                className="text-xs text-orange-400 hover:text-orange-300 transition-colors"
+              >
+                Lupa kata sandi?
+              </Link>
             </div>
           </div>
 
