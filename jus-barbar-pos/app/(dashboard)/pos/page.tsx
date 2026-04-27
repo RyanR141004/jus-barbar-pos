@@ -145,7 +145,7 @@ export default function POSPage() {
       {/* Left: Product Grid */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Search & Filters */}
-        <div className="p-4 border-b border-slate-800 space-y-3 bg-slate-950">
+        <div className="p-4 space-y-3" style={{ borderBottom: '1px solid var(--border-main)', backgroundColor: 'var(--bg-card)' }}>
           {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -175,8 +175,13 @@ export default function POSPage() {
               className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                 selectedCategory === null
                   ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
-                  : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
-              }`}
+                  : 'text-white'
+              } font-semibold transition-all`}
+              style={
+                selectedCategory !== null
+                  ? { backgroundColor: 'var(--btn-secondary-bg)', color: 'var(--text-secondary)' }
+                  : {}
+              }
             >
               Semua
             </button>
@@ -192,8 +197,13 @@ export default function POSPage() {
                 className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                   selectedCategory === cat.id
                     ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
-                    : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
+                    : ''
                 }`}
+                style={
+                  selectedCategory !== cat.id
+                    ? { backgroundColor: 'var(--btn-secondary-bg)', color: 'var(--text-secondary)' }
+                    : {}
+                }
               >
                 {cat.name}
               </button>
@@ -208,15 +218,16 @@ export default function POSPage() {
               {Array.from({ length: 8 }).map((_, i) => (
                 <div
                   key={i}
-                  className="card h-52 animate-pulse bg-slate-800"
+                  className="card h-52 animate-pulse"
+                  style={{ backgroundColor: 'var(--bg-hover)' }}
                 />
               ))}
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center py-16">
               <span className="text-5xl mb-3">🔍</span>
-              <p className="text-slate-400 font-medium">Produk tidak ditemukan</p>
-              <p className="text-slate-600 text-sm mt-1">Coba kata kunci lain</p>
+              <p className="font-medium" style={{ color: 'var(--text-muted)' }}>Produk tidak ditemukan</p>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-dim)' }}>Coba kata kunci lain</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3">

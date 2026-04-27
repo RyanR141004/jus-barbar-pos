@@ -27,10 +27,10 @@ interface TooltipProps {
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 shadow-xl">
-        <p className="text-slate-400 text-xs mb-1">{label}</p>
-        <p className="text-white font-bold">{formatRupiah(payload[0].value)}</p>
-        <p className="text-slate-400 text-xs">{payload[0].payload.count} transaksi</p>
+      <div className="rounded-xl px-4 py-3 shadow-xl" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--bg-card-border)' }}>
+        <p className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>{label}</p>
+        <p className="font-bold" style={{ color: 'var(--text-primary)' }}>{formatRupiah(payload[0].value)}</p>
+        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{payload[0].payload.count} transaksi</p>
       </div>
     );
   }
@@ -118,12 +118,12 @@ export default function LaporanPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white">Laporan Penjualan</h2>
-          <p className="text-slate-400 text-sm mt-1">{periodLabels[period]}</p>
+          <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Laporan Penjualan</h2>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>{periodLabels[period]}</p>
         </div>
 
         {/* Period Selector */}
-        <div className="flex items-center gap-2 bg-slate-800 rounded-xl p-1">
+        <div className="flex items-center gap-2 rounded-xl p-1" style={{ backgroundColor: 'var(--bg-hover)' }}>
           {(['7', '14', '30'] as Period[]).map((p) => (
             <button
               key={p}
@@ -132,8 +132,13 @@ export default function LaporanPage() {
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                 period === p
                   ? 'bg-orange-500 text-white shadow-lg'
-                  : 'text-slate-400 hover:text-white'
+                  : ''
               }`}
+              style={
+                period !== p
+                  ? { color: 'var(--text-muted)' }
+                  : {}
+              }
             >
               {p}H
             </button>
@@ -145,33 +150,33 @@ export default function LaporanPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="stat-card">
           <div className="flex items-center justify-between">
-            <span className="text-slate-400 text-sm">Total Omzet</span>
+            <span className="text-sm" style={{ color: 'var(--text-muted)' }}>Total Omzet</span>
             <TrendingUp className="w-4 h-4 text-orange-400" />
           </div>
-          <p className="text-xl font-bold text-white">{formatRupiah(totalRevenue)}</p>
-          <p className="text-slate-500 text-xs">{periodLabels[period]}</p>
+          <p className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{formatRupiah(totalRevenue)}</p>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{periodLabels[period]}</p>
         </div>
         <div className="stat-card">
           <div className="flex items-center justify-between">
-            <span className="text-slate-400 text-sm">Total Transaksi</span>
+            <span className="text-sm" style={{ color: 'var(--text-muted)' }}>Total Transaksi</span>
             <ShoppingBag className="w-4 h-4 text-blue-400" />
           </div>
-          <p className="text-xl font-bold text-white">{totalTransactions}</p>
-          <p className="text-slate-500 text-xs">Transaksi selesai</p>
+          <p className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{totalTransactions}</p>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Transaksi selesai</p>
         </div>
         <div className="stat-card">
           <div className="flex items-center justify-between">
-            <span className="text-slate-400 text-sm">Rata-rata/Hari</span>
+            <span className="text-sm" style={{ color: 'var(--text-muted)' }}>Rata-rata/Hari</span>
             <Calendar className="w-4 h-4 text-purple-400" />
           </div>
-          <p className="text-xl font-bold text-white">{formatRupiah(avgPerDay)}</p>
-          <p className="text-slate-500 text-xs">Hari aktif berjualan</p>
+          <p className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{formatRupiah(avgPerDay)}</p>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Hari aktif berjualan</p>
         </div>
       </div>
 
       {/* Bar Chart */}
       <div className="card p-5">
-        <h3 className="font-semibold text-white mb-5">Tren Omzet Harian</h3>
+        <h3 className="font-semibold mb-5" style={{ color: 'var(--text-primary)' }}>Tren Omzet Harian</h3>
         {loading ? (
           <div className="h-64 flex items-center justify-center">
             <RefreshCw className="w-6 h-6 text-slate-500 animate-spin" />
@@ -208,8 +213,8 @@ export default function LaporanPage() {
       <div className="card p-5">
         <div className="flex items-center gap-2 mb-5">
           <Award className="w-5 h-5 text-amber-400" />
-          <h3 className="font-semibold text-white">Produk Terlaris</h3>
-          <span className="text-slate-500 text-xs ml-1">({periodLabels[period]})</span>
+          <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Produk Terlaris</h3>
+          <span className="text-xs ml-1" style={{ color: 'var(--text-muted)' }}>({periodLabels[period]})</span>
         </div>
 
         {topProducts.length === 0 ? (
@@ -229,14 +234,14 @@ export default function LaporanPage() {
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-white text-sm font-medium truncate">
+                      <span className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>
                         {product.name}
                       </span>
-                      <span className="text-slate-400 text-xs ml-2 flex-shrink-0">
+                      <span className="text-xs ml-2 flex-shrink-0" style={{ color: 'var(--text-muted)' }}>
                         {product.total_qty} terjual
                       </span>
                     </div>
-                    <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-hover)' }}>
                       <div
                         className="h-full bg-gradient-to-r from-orange-500 to-orange-400 rounded-full transition-all duration-500"
                         style={{ width: `${percentage}%` }}

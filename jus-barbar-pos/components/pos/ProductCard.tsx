@@ -17,7 +17,7 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
       onClick={() => onAdd(product)}
     >
       {/* Image */}
-      <div className="relative h-36 bg-slate-800 overflow-hidden">
+      <div className="relative h-36 overflow-hidden" style={{ backgroundColor: 'var(--bg-hover)' }}>
         {product.image_url ? (
           <Image
             src={product.image_url}
@@ -27,7 +27,7 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
             sizes="(max-width: 768px) 50vw, 25vw"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-500/10 to-slate-800">
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-500/10 to-transparent">
             <span className="text-4xl">🥤</span>
           </div>
         )}
@@ -42,11 +42,11 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
 
       {/* Info */}
       <div className="p-3">
-        <p className="font-semibold text-white text-sm leading-tight line-clamp-1">
+        <p className="font-semibold text-sm leading-tight line-clamp-1" style={{ color: 'var(--text-primary)' }}>
           {product.name}
         </p>
         {product.categories && (
-          <p className="text-slate-500 text-xs mt-0.5">{product.categories.name}</p>
+          <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{product.categories.name}</p>
         )}
         <p className="text-orange-400 font-bold text-sm mt-1.5">
           {formatRupiah(product.price)}

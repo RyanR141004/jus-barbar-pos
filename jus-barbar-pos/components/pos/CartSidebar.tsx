@@ -32,12 +32,15 @@ export default function CartSidebar({
   const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="flex flex-col h-full bg-slate-900 border-l border-slate-800">
+    <div
+      className="flex flex-col h-full"
+      style={{ backgroundColor: 'var(--bg-sidebar)', borderLeft: '1px solid var(--border-main)' }}
+    >
       {/* Header */}
-      <div className="p-5 border-b border-slate-800 space-y-4">
+      <div className="p-5 space-y-4" style={{ borderBottom: '1px solid var(--border-main)' }}>
         <div className="flex items-center gap-2">
           <ShoppingCart className="w-5 h-5 text-orange-400" />
-          <h2 className="font-bold text-white">Keranjang</h2>
+          <h2 className="font-bold" style={{ color: 'var(--text-primary)' }}>Keranjang</h2>
           {itemCount > 0 && (
             <span className="ml-auto bg-orange-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center animate-bounce-in">
               {itemCount}
@@ -47,13 +50,13 @@ export default function CartSidebar({
         
         {/* Customer Name Input */}
         <div className="relative">
-          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--text-placeholder)' }} />
           <input
             type="text"
             placeholder="Nama Pembeli (Wajib)"
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
-            className="input-field pl-9 py-2 text-sm bg-slate-950"
+            className="input-field pl-9 py-2 text-sm"
             required
           />
         </div>
@@ -64,18 +67,19 @@ export default function CartSidebar({
         {cartItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-12">
             <div className="text-5xl mb-3">🛒</div>
-            <p className="text-slate-400 font-medium text-sm">Keranjang kosong</p>
-            <p className="text-slate-600 text-xs mt-1">Pilih produk dari menu</p>
+            <p className="font-medium text-sm" style={{ color: 'var(--text-muted)' }}>Keranjang kosong</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--text-dim)' }}>Pilih produk dari menu</p>
           </div>
         ) : (
           cartItems.map((item) => (
             <div
               key={item.product.id}
-              className="bg-slate-800 rounded-xl p-3 space-y-2 animate-fade-in"
+              className="rounded-xl p-3 space-y-2 animate-fade-in"
+              style={{ backgroundColor: 'var(--bg-hover)' }}
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
-                  <p className="text-white text-sm font-medium line-clamp-1">
+                  <p className="text-sm font-medium line-clamp-1" style={{ color: 'var(--text-primary)' }}>
                     {item.product.name}
                   </p>
                   <p className="text-orange-400 text-xs font-semibold">
@@ -84,7 +88,8 @@ export default function CartSidebar({
                 </div>
                 <button
                   onClick={() => onRemove(item.product.id)}
-                  className="text-slate-500 hover:text-red-400 transition-colors flex-shrink-0 p-1"
+                  className="hover:text-red-400 transition-colors flex-shrink-0 p-1"
+                  style={{ color: 'var(--text-muted)' }}
                   aria-label="Hapus item"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -96,11 +101,12 @@ export default function CartSidebar({
                   <button
                     id={`btn-decrease-${item.product.id}`}
                     onClick={() => onDecrease(item.product.id)}
-                    className="w-7 h-7 bg-slate-700 hover:bg-slate-600 rounded-lg flex items-center justify-center transition-colors"
+                    className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                    style={{ backgroundColor: 'var(--btn-secondary-bg)', color: 'var(--text-primary)' }}
                   >
-                    <Minus className="w-3 h-3 text-white" />
+                    <Minus className="w-3 h-3" />
                   </button>
-                  <span className="text-white font-bold text-sm w-6 text-center">
+                  <span className="font-bold text-sm w-6 text-center" style={{ color: 'var(--text-primary)' }}>
                     {item.quantity}
                   </span>
                   <button
@@ -111,7 +117,7 @@ export default function CartSidebar({
                     <Plus className="w-3 h-3 text-white" />
                   </button>
                 </div>
-                <p className="text-white font-bold text-sm">
+                <p className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>
                   {formatRupiah(item.product.price * item.quantity)}
                 </p>
               </div>
@@ -121,10 +127,10 @@ export default function CartSidebar({
       </div>
 
       {/* Footer / Total */}
-      <div className="p-4 border-t border-slate-800 space-y-4">
+      <div className="p-4 space-y-4" style={{ borderTop: '1px solid var(--border-main)' }}>
         <div className="flex items-center justify-between">
-          <span className="text-slate-400 font-medium text-sm">Subtotal</span>
-          <span className="text-white font-bold text-lg">{formatRupiah(total)}</span>
+          <span className="font-medium text-sm" style={{ color: 'var(--text-muted)' }}>Subtotal</span>
+          <span className="font-bold text-lg" style={{ color: 'var(--text-primary)' }}>{formatRupiah(total)}</span>
         </div>
 
         <button

@@ -71,8 +71,8 @@ export default function ProdukPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white">Manajemen Produk</h2>
-          <p className="text-slate-400 text-sm mt-1">{products.length} produk terdaftar</p>
+          <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Manajemen Produk</h2>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>{products.length} produk terdaftar</p>
         </div>
         <div className="flex gap-3">
           <button
@@ -125,8 +125,8 @@ export default function ProdukPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-slate-800/50 border-b border-slate-800">
-                <tr className="text-slate-400">
+              <thead style={{ backgroundColor: 'var(--bg-table-head)', borderBottom: '1px solid var(--border-main)' }}>
+                <tr style={{ color: 'var(--text-muted)' }}>
                   <th className="text-left py-3 px-4 font-medium">Produk</th>
                   <th className="text-left py-3 px-4 font-medium hidden sm:table-cell">Kategori</th>
                   <th className="text-right py-3 px-4 font-medium">Harga</th>
@@ -138,12 +138,13 @@ export default function ProdukPage() {
                   return (
                     <tr
                       key={product.id}
-                      className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors"
+                      className="transition-colors"
+                    style={{ borderBottom: '1px solid var(--border-light)' }}
                     >
                       {/* Product */}
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-800 flex-shrink-0">
+                          <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--bg-hover)' }}>
                             {product.image_url ? (
                               <Image
                                 src={product.image_url}
@@ -158,19 +159,19 @@ export default function ProdukPage() {
                               </div>
                             )}
                           </div>
-                          <span className="font-medium text-white">{product.name}</span>
+                          <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{product.name}</span>
                         </div>
                       </td>
 
                       {/* Category */}
                       <td className="py-3 px-4 hidden sm:table-cell">
-                        <span className="text-slate-400">
+                        <span style={{ color: 'var(--text-muted)' }}>
                           {product.categories?.name ?? '—'}
                         </span>
                       </td>
 
                       {/* Price */}
-                      <td className="py-3 px-4 text-right font-semibold text-white">
+                      <td className="py-3 px-4 text-right font-semibold" style={{ color: 'var(--text-primary)' }}>
                         {formatRupiah(product.price)}
                       </td>
 
