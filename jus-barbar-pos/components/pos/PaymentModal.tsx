@@ -48,11 +48,11 @@ export default function PaymentModal({
             <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="w-10 h-10 text-emerald-400" />
             </div>
-            <h3 className="text-xl font-bold text-white">Pembayaran Berhasil!</h3>
+            <h3 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Pembayaran Berhasil!</h3>
             {method === 'CASH' && change > 0 && (
-              <p className="text-slate-400 mt-2 text-sm">
+              <p className="mt-2 text-sm" style={{ color: 'var(--text-muted)' }}>
                 Kembalian:{' '}
-                <span className="text-white font-bold">{formatRupiah(change)}</span>
+                <span className="font-bold" style={{ color: 'var(--text-primary)' }}>{formatRupiah(change)}</span>
               </p>
             )}
             <p className="text-emerald-400 text-sm mt-1">Transaksi tersimpan</p>
@@ -60,7 +60,8 @@ export default function PaymentModal({
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => window.print()}
-                className="flex-1 btn-secondary justify-center py-3 border border-slate-600 hover:border-slate-500"
+                className="flex-1 btn-secondary justify-center py-3"
+                style={{ border: '1px solid var(--bg-input-border)' }}
               >
                 🖨️ Cetak Struk
               </button>
@@ -127,26 +128,39 @@ export default function PaymentModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
       <div className="card-glass max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Modal Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-700">
-          <h3 className="font-bold text-white text-lg">Pilih Metode Pembayaran</h3>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
+        <div
+          className="flex items-center justify-between p-5"
+          style={{ borderBottom: '1px solid var(--border-main)' }}
+        >
+          <h3 className="font-bold text-lg" style={{ color: 'var(--text-primary)' }}>Pilih Metode Pembayaran</h3>
+          <button
+            onClick={onClose}
+            className="transition-colors"
+            style={{ color: 'var(--text-muted)' }}
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="p-5 space-y-5">
           {/* Order summary */}
-          <div className="bg-slate-800/60 rounded-xl p-4 space-y-2">
+          <div
+            className="rounded-xl p-4 space-y-2"
+            style={{ backgroundColor: 'var(--bg-hover)' }}
+          >
             {cartItems.map((item) => (
               <div key={item.product.id} className="flex justify-between text-sm">
-                <span className="text-slate-400">
+                <span style={{ color: 'var(--text-muted)' }}>
                   {item.product.name} × {item.quantity}
                 </span>
-                <span className="text-white">{formatRupiah(item.product.price * item.quantity)}</span>
+                <span style={{ color: 'var(--text-primary)' }}>{formatRupiah(item.product.price * item.quantity)}</span>
               </div>
             ))}
-            <div className="border-t border-slate-700 pt-2 flex justify-between font-bold">
-              <span className="text-slate-300">Total</span>
+            <div
+              className="pt-2 flex justify-between font-bold"
+              style={{ borderTop: '1px solid var(--border-main)' }}
+            >
+              <span style={{ color: 'var(--text-secondary)' }}>Total</span>
               <span className="text-orange-400 text-lg">{formatRupiah(total)}</span>
             </div>
           </div>
@@ -161,11 +175,19 @@ export default function PaymentModal({
                 className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
                   method === 'CASH'
                     ? 'border-orange-500 bg-orange-500/10'
-                    : 'border-slate-700 bg-slate-800 hover:border-slate-600'
+                    : ''
                 }`}
+                style={
+                  method !== 'CASH'
+                    ? { borderColor: 'var(--bg-input-border)', backgroundColor: 'var(--bg-input)' }
+                    : {}
+                }
               >
-                <Banknote className={`w-6 h-6 ${method === 'CASH' ? 'text-orange-400' : 'text-slate-400'}`} />
-                <span className={`font-semibold text-sm ${method === 'CASH' ? 'text-white' : 'text-slate-300'}`}>
+                <Banknote className={`w-6 h-6 ${method === 'CASH' ? 'text-orange-400' : ''}`} style={method !== 'CASH' ? { color: 'var(--text-muted)' } : {}} />
+                <span
+                  className="font-semibold text-sm"
+                  style={{ color: method === 'CASH' ? 'var(--text-primary)' : 'var(--text-secondary)' }}
+                >
                   Tunai
                 </span>
               </button>
@@ -175,11 +197,19 @@ export default function PaymentModal({
                 className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
                   method === 'QRIS'
                     ? 'border-orange-500 bg-orange-500/10'
-                    : 'border-slate-700 bg-slate-800 hover:border-slate-600'
+                    : ''
                 }`}
+                style={
+                  method !== 'QRIS'
+                    ? { borderColor: 'var(--bg-input-border)', backgroundColor: 'var(--bg-input)' }
+                    : {}
+                }
               >
-                <QrCode className={`w-6 h-6 ${method === 'QRIS' ? 'text-orange-400' : 'text-slate-400'}`} />
-                <span className={`font-semibold text-sm ${method === 'QRIS' ? 'text-white' : 'text-slate-300'}`}>
+                <QrCode className={`w-6 h-6 ${method === 'QRIS' ? 'text-orange-400' : ''}`} style={method !== 'QRIS' ? { color: 'var(--text-muted)' } : {}} />
+                <span
+                  className="font-semibold text-sm"
+                  style={{ color: method === 'QRIS' ? 'var(--text-primary)' : 'var(--text-secondary)' }}
+                >
                   QRIS
                 </span>
               </button>
@@ -211,7 +241,12 @@ export default function PaymentModal({
                     <button
                       key={i}
                       onClick={() => setCashReceived(String(v))}
-                      className="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-sm font-semibold text-slate-200 transition-colors border border-slate-700 hover:border-slate-600"
+                      className="py-2.5 px-3 rounded-xl text-sm font-semibold transition-colors"
+                      style={{
+                        backgroundColor: 'var(--bg-input)',
+                        color: 'var(--text-primary)',
+                        border: '1px solid var(--bg-input-border)',
+                      }}
                     >
                       {formatRupiah(v)}
                     </button>
@@ -220,7 +255,7 @@ export default function PaymentModal({
 
               {cashReceived && Number(cashReceived) >= total && (
                 <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 flex justify-between">
-                  <span className="text-slate-400 text-sm">Kembalian</span>
+                  <span className="text-sm" style={{ color: 'var(--text-muted)' }}>Kembalian</span>
                   <span className="text-emerald-400 font-bold">{formatRupiah(change)}</span>
                 </div>
               )}
@@ -251,7 +286,7 @@ export default function PaymentModal({
                 </p>
                 <p className="text-slate-800 font-bold text-lg">{formatRupiah(total)}</p>
               </div>
-              <p className="text-slate-500 text-xs text-center mt-2">
+              <p className="text-xs text-center mt-2" style={{ color: 'var(--text-muted)' }}>
                 Klik &quot;Selesai Bayar&quot; setelah pembayaran dikonfirmasi
               </p>
             </div>
