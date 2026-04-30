@@ -16,6 +16,20 @@ export const metadata: Metadata = {
 export default async function DashboardPage() {
   const supabase = await createClient();
 
+  // Fetch current user and role
+  const { data: { user } } = await supabase.auth.getUser();
+  let userRole = 'kasir';
+  let userName = '';
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role, full_name')
+      .eq('id', user.id)
+      .single();
+    userRole = profile?.role ?? 'kasir';
+    userName = profile?.full_name ?? '';
+  }
+
   // Today's date range (WIB timezone)
   const today = new Date();
   const startOfDay = new Date(today);
@@ -41,12 +55,16 @@ export default async function DashboardPage() {
     .order('created_at', { ascending: false })
     .limit(5);
 
+  const greeting = userRole === 'admin'
+    ? `Selamat Datang Bos Opin 👋`
+    : `Selamat Datang${userName ? `, ${userName}` : ''} 👋`;
+
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Greeting */}
       <div>
         <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-          Selamat Datang Bos Opin 👋
+          {greeting}
         </h2>
         <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
           {today.toLocaleDateString('id-ID', {

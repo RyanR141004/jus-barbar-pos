@@ -10,12 +10,13 @@ import {
   GlassWater,
   X,
 } from 'lucide-react';
+import { useRole } from '@/components/shared/RoleProvider';
 
-const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/pos', label: 'Kasir (POS)', icon: ShoppingCart },
-  { href: '/produk', label: 'Manajemen Produk', icon: Package },
-  { href: '/laporan', label: 'Laporan', icon: BarChart3 },
+const allNavItems = [
+  { href: '/', label: 'Dashboard', icon: LayoutDashboard, roles: ['admin', 'kasir'] },
+  { href: '/pos', label: 'Kasir (POS)', icon: ShoppingCart, roles: ['admin', 'kasir'] },
+  { href: '/produk', label: 'Manajemen Produk', icon: Package, roles: ['admin'] },
+  { href: '/laporan', label: 'Laporan', icon: BarChart3, roles: ['admin'] },
 ];
 
 interface SidebarProps {
@@ -24,6 +25,12 @@ interface SidebarProps {
 
 export default function Sidebar({ onClose }: SidebarProps) {
   const pathname = usePathname();
+  const { role } = useRole();
+
+  // Filter nav items berdasarkan role user
+  const navItems = allNavItems.filter(
+    (item) => role && item.roles.includes(role)
+  );
 
   return (
     <aside
@@ -41,7 +48,9 @@ export default function Sidebar({ onClose }: SidebarProps) {
           </div>
           <div>
             <p className="font-bold text-sm leading-tight" style={{ color: 'var(--text-primary)' }}>Jus Bar Bar</p>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Point of Sale</p>
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              {role === 'admin' ? 'Admin Panel' : 'Point of Sale'}
+            </p>
           </div>
         </div>
         {onClose && (
@@ -84,7 +93,20 @@ export default function Sidebar({ onClose }: SidebarProps) {
 
       {/* Footer */}
       <div className="p-4" style={{ borderTop: '1px solid var(--border-main)' }}>
-        <p className="text-xs text-center" style={{ color: 'var(--text-dim)' }}>v1.0.0</p>
+        <div className="text-center">
+          {role && (
+            <span
+              className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                role === 'admin'
+                  ? 'bg-orange-500/10 text-orange-400'
+                  : 'bg-blue-500/10 text-blue-400'
+              }`}
+            >
+              {role === 'admin' ? '👑 Admin' : '🧑‍💼 Kasir'}
+            </span>
+          )}
+          <p className="text-xs mt-2" style={{ color: 'var(--text-dim)' }}>v1.0.0</p>
+        </div>
       </div>
     </aside>
   );

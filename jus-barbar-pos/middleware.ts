@@ -1,6 +1,9 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
+// Routes yang hanya bisa diakses oleh admin
+const ADMIN_ONLY_ROUTES = ['/produk', '/laporan'];
+
 export async function middleware(request: NextRequest) {
   const isAuthPage =
     request.nextUrl.pathname.startsWith('/login') ||
@@ -47,6 +50,30 @@ export async function middleware(request: NextRequest) {
       const url = request.nextUrl.clone();
       url.pathname = '/';
       return NextResponse.redirect(url);
+    }
+
+    // Cek akses admin-only routes
+    if (user) {
+      const isAdminRoute = ADMIN_ONLY_ROUTES.some((route) =>
+        request.nextUrl.pathname.startsWith(route)
+      );
+
+      if (isAdminRoute) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+
+        const role = profile?.role ?? 'kasir';
+
+        if (role !== 'admin') {
+          // Kasir tidak boleh akses halaman admin, redirect ke dashboard
+          const url = request.nextUrl.clone();
+          url.pathname = '/';
+          return NextResponse.redirect(url);
+        }
+      }
     }
 
     return supabaseResponse;

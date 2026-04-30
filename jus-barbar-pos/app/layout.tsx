@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/shared/ThemeProvider';
+import { RoleProvider } from '@/components/shared/RoleProvider';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="id" data-theme="dark">
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider><RoleProvider>{children}</RoleProvider></ThemeProvider>
       </body>
     </html>
   );
