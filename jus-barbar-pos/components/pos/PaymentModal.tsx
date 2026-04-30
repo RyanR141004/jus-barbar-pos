@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Banknote, QrCode, CheckCircle, Loader2 } from 'lucide-react';
+import { X, Banknote, QrCode, CheckCircle, Loader2, Printer } from 'lucide-react';
 import Image from 'next/image';
 import { formatRupiah } from '@/lib/utils';
+import { printReceipt } from '@/lib/bluetooth-printer';
 import type { CartItem } from '@/types/database.types';
 
 interface PaymentModalProps {
@@ -25,6 +26,8 @@ export default function PaymentModal({
   const [cashReceived, setCashReceived] = useState('');
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [printing, setPrinting] = useState(false);
+  const [printMessage, setPrintMessage] = useState('');
 
   const change = method === 'CASH' ? Number(cashReceived) - total : 0;
   const cashValid =
@@ -36,6 +39,29 @@ export default function PaymentModal({
     await onConfirm(method);
     setSuccess(true);
     setProcessing(false);
+  };
+
+  const handlePrint = async () => {
+    if (!method) return;
+    setPrinting(true);
+    setPrintMessage('');
+
+    const result = await printReceipt({
+      customerName,
+      items: cartItems.map((item) => ({
+        name: item.product.name,
+        qty: item.quantity,
+        price: item.product.price,
+        subtotal: item.product.price * item.quantity,
+      })),
+      total,
+      paymentMethod: method,
+      cashReceived: method === 'CASH' ? Number(cashReceived) : undefined,
+      change: method === 'CASH' ? change : undefined,
+    });
+
+    setPrintMessage(result.message);
+    setPrinting(false);
   };
 
 
@@ -56,14 +82,26 @@ export default function PaymentModal({
               </p>
             )}
             <p className="text-emerald-400 text-sm mt-1">Transaksi tersimpan</p>
+
+            {/* Print status message */}
+            {printMessage && (
+              <p className={`text-xs mt-2 ${printMessage.includes('berhasil') ? 'text-emerald-400' : 'text-red-400'}`}>
+                {printMessage}
+              </p>
+            )}
             
             <div className="flex gap-3 mt-6">
               <button
-                onClick={() => window.print()}
+                onClick={handlePrint}
+                disabled={printing}
                 className="flex-1 btn-secondary justify-center py-3"
                 style={{ border: '1px solid var(--bg-input-border)' }}
               >
-                🖨️ Cetak Struk
+                {printing ? (
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Mencetak...</>
+                ) : (
+                  <><Printer className="w-4 h-4" /> Cetak Struk</>
+                )}
               </button>
               <button
                 id="btn-close-success"
