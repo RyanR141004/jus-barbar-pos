@@ -145,21 +145,6 @@ export default function LoginPage() {
               </p>
             </div>
           </div>
-          <div className="flex flex-wrap gap-1.5 mt-3">
-            {loginRole === "admin" ? (
-              <>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 font-medium">Dashboard</span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 font-medium">Kasir POS</span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 font-medium">Manajemen Produk</span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 font-medium">Laporan</span>
-              </>
-            ) : (
-              <>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-medium">Dashboard</span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-medium">Kasir POS</span>
-              </>
-            )}
-          </div>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
