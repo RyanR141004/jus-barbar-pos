@@ -113,15 +113,53 @@ export default function LoginPage() {
           </button>
         </div>
 
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold" style={{ color: "var(--text-primary)" }}>
-            {loginRole === "admin" ? "Masuk sebagai Admin" : "Masuk sebagai Kasir"}
-          </h2>
-          <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
-            {loginRole === "admin"
-              ? "Akses penuh ke semua fitur"
-              : "Akses ke Dashboard dan Kasir POS"}
-          </p>
+        {/* Role Info Card */}
+        <div
+          className="mb-6 rounded-xl p-4 relative overflow-hidden"
+          style={{
+            background: loginRole === "admin"
+              ? "linear-gradient(135deg, rgba(249,115,22,0.1), rgba(234,88,12,0.05))"
+              : "linear-gradient(135deg, rgba(59,130,246,0.1), rgba(37,99,235,0.05))",
+            border: `1px solid ${loginRole === "admin" ? "rgba(249,115,22,0.2)" : "rgba(59,130,246,0.2)"}`,
+          }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div
+              className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                loginRole === "admin"
+                  ? "bg-orange-500/20"
+                  : "bg-blue-500/20"
+              }`}
+            >
+              {loginRole === "admin"
+                ? <ShieldCheck className="w-5 h-5 text-orange-400" />
+                : <UserRound className="w-5 h-5 text-blue-400" />
+              }
+            </div>
+            <div>
+              <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
+                {loginRole === "admin" ? "Masuk sebagai Admin" : "Masuk sebagai Kasir"}
+              </h2>
+              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                {loginRole === "admin" ? "Akses penuh ke seluruh sistem" : "Akses operasional harian"}
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {loginRole === "admin" ? (
+              <>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 font-medium">Dashboard</span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 font-medium">Kasir POS</span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 font-medium">Manajemen Produk</span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 font-medium">Laporan</span>
+              </>
+            ) : (
+              <>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-medium">Dashboard</span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-medium">Kasir POS</span>
+              </>
+            )}
+          </div>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
