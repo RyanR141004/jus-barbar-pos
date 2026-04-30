@@ -46,7 +46,7 @@ export default async function DashboardPage() {
       {/* Greeting */}
       <div>
         <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-          Selamat Datang 👋
+          Selamat Datang Bos Opin 👋
         </h2>
         <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
           {today.toLocaleDateString('id-ID', {

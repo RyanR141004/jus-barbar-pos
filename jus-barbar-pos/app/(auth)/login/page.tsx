@@ -44,7 +44,7 @@ export default function LoginPage() {
           <GlassWater className="w-8 h-8 text-white" />
         </div>
         <h1 className="text-2xl font-bold text-white">Jus Bar Bar</h1>
-        <p className="text-slate-400 text-sm mt-1">Sistem Point of Sale</p>
+        <p className="text-slate-400 text-sm mt-1">Selamat Datang Bos Opin</p>
       </div>
 
       {/* Card */}
@@ -139,7 +139,7 @@ export default function LoginPage() {
         </form>
       </div>
 
-      <p className="text-center text-slate-600 text-xs mt-6">
+      <p className="text-center text-xs mt-6" style={{ color: 'var(--text-muted)' }}>
         Jus Bar Bar POS © {new Date().getFullYear()}
       </p>
     </div>
