@@ -123,21 +123,23 @@ export default async function DashboardPage() {
               </div>
               <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link
-              href="/laporan"
-              id="btn-goto-laporan"
-              className="flex items-center justify-between p-4 rounded-xl transition-all group"
-              style={{ backgroundColor: 'var(--bg-hover)' }}
-            >
-              <div className="flex items-center gap-3">
-                <TrendingUp className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
-                <div>
-                  <p className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Lihat Laporan</p>
-                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Tren & statistik</p>
+            {userRole === 'admin' && (
+              <Link
+                href="/laporan"
+                id="btn-goto-laporan"
+                className="flex items-center justify-between p-4 rounded-xl transition-all group"
+                style={{ backgroundColor: 'var(--bg-hover)' }}
+              >
+                <div className="flex items-center gap-3">
+                  <TrendingUp className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                  <div>
+                    <p className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Lihat Laporan</p>
+                    <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Tren & statistik</p>
+                  </div>
                 </div>
-              </div>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" style={{ color: 'var(--text-muted)' }} />
-            </Link>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" style={{ color: 'var(--text-muted)' }} />
+              </Link>
+            )}
           </div>
         </div>
 
@@ -146,9 +148,11 @@ export default async function DashboardPage() {
       <div className="card p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>Transaksi Terakhir</h3>
-          <Link href="/laporan" className="text-orange-400 hover:text-orange-300 text-xs font-medium">
-            Lihat semua →
-          </Link>
+          {userRole === 'admin' ? (
+            <Link href="/laporan" className="text-orange-400 hover:text-orange-300 text-xs font-medium">
+              Lihat semua →
+            </Link>
+          ) : null}
         </div>
         {!recentTransactions || recentTransactions.length === 0 ? (
           <div className="text-center py-8">
