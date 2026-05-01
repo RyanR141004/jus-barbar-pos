@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import EditableGreeting from '@/components/shared/EditableGreeting';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -63,9 +64,7 @@ export default async function DashboardPage() {
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Greeting */}
       <div>
-        <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-          {greeting}
-        </h2>
+        <EditableGreeting initialName={userName || 'Bos Opin'} role={userRole} />
         <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
           {today.toLocaleDateString('id-ID', {
             weekday: 'long',
