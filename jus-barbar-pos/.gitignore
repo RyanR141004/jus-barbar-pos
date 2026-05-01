@@ -1,4 +1,4 @@
-# .gitignore
+7# .gitignore
 node_modules/
 .next/
 .env.local

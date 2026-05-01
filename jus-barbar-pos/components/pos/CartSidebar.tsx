@@ -1,6 +1,7 @@
 'use client';
 
-import { Plus, Minus, Trash2, ShoppingCart, CreditCard, User } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Minus, Trash2, ShoppingCart, CreditCard, User, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
 import { formatRupiah } from '@/lib/utils';
 import type { CartItem } from '@/types/database.types';
 
@@ -11,6 +12,7 @@ interface CartSidebarProps {
   onIncrease: (productId: number) => void;
   onDecrease: (productId: number) => void;
   onRemove: (productId: number) => void;
+  onUpdateNotes: (productId: number, notes: string) => void;
   onCheckout: () => void;
   isProcessing: boolean;
 }
@@ -22,14 +24,20 @@ export default function CartSidebar({
   onIncrease,
   onDecrease,
   onRemove,
+  onUpdateNotes,
   onCheckout,
   isProcessing,
 }: CartSidebarProps) {
+  const [expandedNotes, setExpandedNotes] = useState<Record<number, boolean>>({});
   const total = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
   const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  const toggleNotes = (productId: number) => {
+    setExpandedNotes((prev) => ({ ...prev, [productId]: !prev[productId] }));
+  };
 
   return (
     <div
@@ -120,6 +128,36 @@ export default function CartSidebar({
                 <p className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>
                   {formatRupiah(item.product.price * item.quantity)}
                 </p>
+              </div>
+
+              {/* Notes Toggle & Input */}
+              <div>
+                <button
+                  onClick={() => toggleNotes(item.product.id)}
+                  className="flex items-center gap-1.5 text-xs transition-colors w-full"
+                  style={{ color: item.notes ? 'var(--text-primary)' : 'var(--text-muted)' }}
+                >
+                  <MessageSquare className="w-3 h-3" />
+                  <span>{item.notes ? 'Catatan' : 'Tambah catatan'}</span>
+                  {item.notes && !expandedNotes[item.product.id] && (
+                    <span className="text-orange-400 truncate flex-1 text-left">— {item.notes}</span>
+                  )}
+                  {expandedNotes[item.product.id] ? (
+                    <ChevronUp className="w-3 h-3 ml-auto flex-shrink-0" />
+                  ) : (
+                    <ChevronDown className="w-3 h-3 ml-auto flex-shrink-0" />
+                  )}
+                </button>
+                {expandedNotes[item.product.id] && (
+                  <input
+                    type="text"
+                    placeholder="cth: gula sedikit, tanpa es..."
+                    value={item.notes}
+                    onChange={(e) => onUpdateNotes(item.product.id, e.target.value)}
+                    className="input-field mt-1.5 py-1.5 text-xs"
+                    maxLength={100}
+                  />
+                )}
               </div>
             </div>
           ))

@@ -52,7 +52,7 @@ function separator(char: string = '-', width: number = 32): string {
 
 export interface PrintReceiptData {
   customerName: string;
-  items: { name: string; qty: number; price: number; subtotal: number }[];
+  items: { name: string; qty: number; price: number; subtotal: number; notes?: string }[];
   total: number;
   paymentMethod: 'CASH' | 'QRIS';
   cashReceived?: number;
@@ -98,6 +98,9 @@ function buildReceipt(data: PrintReceiptData): Uint8Array {
   // Items
   for (const item of data.items) {
     addText(item.name);
+    if (item.notes && item.notes.trim()) {
+      addText(`  * ${item.notes.trim()}`);
+    }
     const qtyPrice = `  ${item.qty} x ${formatRupiah(item.price)}`;
     const subtotal = formatRupiah(item.subtotal);
     addText(formatLine(qtyPrice, subtotal));

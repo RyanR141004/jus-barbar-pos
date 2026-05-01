@@ -59,7 +59,7 @@ export default function POSPage() {
             : i
         );
       }
-      return [...prev, { product, quantity: 1 }];
+      return [...prev, { product, quantity: 1, notes: '' }];
     });
   };
 
@@ -86,6 +86,14 @@ export default function POSPage() {
 
   const removeFromCart = (productId: number) => {
     setCartItems((prev) => prev.filter((i) => i.product.id !== productId));
+  };
+
+  const updateNotes = (productId: number, notes: string) => {
+    setCartItems((prev) =>
+      prev.map((i) =>
+        i.product.id === productId ? { ...i, notes } : i
+      )
+    );
   };
 
   const clearCart = () => setCartItems([]);
@@ -115,6 +123,7 @@ export default function POSPage() {
       product_id: item.product.id,
       quantity: item.quantity,
       subtotal: item.product.price * item.quantity,
+      notes: item.notes.trim() || null,
     }));
 
     const { error: itemsError } = await supabase
@@ -253,6 +262,7 @@ export default function POSPage() {
             onIncrease={increaseQty}
             onDecrease={decreaseQty}
             onRemove={removeFromCart}
+            onUpdateNotes={updateNotes}
             onCheckout={() => setShowPaymentModal(true)}
             isProcessing={isProcessing}
           />
@@ -286,6 +296,7 @@ export default function POSPage() {
               onIncrease={increaseQty}
               onDecrease={decreaseQty}
               onRemove={removeFromCart}
+              onUpdateNotes={updateNotes}
               onCheckout={() => {
                 setShowCart(false);
                 setShowPaymentModal(true);

@@ -53,6 +53,7 @@ export default function PaymentModal({
         qty: item.quantity,
         price: item.product.price,
         subtotal: item.product.price * item.quantity,
+        notes: item.notes || '',
       })),
       total,
       paymentMethod: method,
@@ -130,6 +131,9 @@ export default function PaymentModal({
             {cartItems.map((item, i) => (
               <div key={i}>
                 <p className="uppercase">{item.product.name}</p>
+                {item.notes && (
+                  <p className="pl-2 italic" style={{ fontSize: '10px' }}>* {item.notes}</p>
+                )}
                 <div className="flex justify-between pl-2">
                   <span>{item.quantity} x {formatRupiah(item.product.price)}</span>
                   <span>{formatRupiah(item.product.price * item.quantity)}</span>
@@ -187,11 +191,16 @@ export default function PaymentModal({
             style={{ backgroundColor: 'var(--bg-hover)' }}
           >
             {cartItems.map((item) => (
-              <div key={item.product.id} className="flex justify-between text-sm">
-                <span style={{ color: 'var(--text-muted)' }}>
-                  {item.product.name} × {item.quantity}
-                </span>
-                <span style={{ color: 'var(--text-primary)' }}>{formatRupiah(item.product.price * item.quantity)}</span>
+              <div key={item.product.id}>
+                <div className="flex justify-between text-sm">
+                  <span style={{ color: 'var(--text-muted)' }}>
+                    {item.product.name} × {item.quantity}
+                  </span>
+                  <span style={{ color: 'var(--text-primary)' }}>{formatRupiah(item.product.price * item.quantity)}</span>
+                </div>
+                {item.notes && (
+                  <p className="text-xs italic ml-2 text-orange-400">✏️ {item.notes}</p>
+                )}
               </div>
             ))}
             <div

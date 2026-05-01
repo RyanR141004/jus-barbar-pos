@@ -29,12 +29,14 @@ export type TransactionItem = {
   product_id: number;
   quantity: number;
   subtotal: number;
+  notes: string | null;
   products?: Product;
 };
 
 export type CartItem = {
   product: Product;
   quantity: number;
+  notes: string;
 };
 
 export type DailySalesData = {
