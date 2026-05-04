@@ -55,6 +55,7 @@ export interface PrintReceiptData {
   items: { name: string; qty: number; price: number; subtotal: number; notes?: string }[];
   total: number;
   paymentMethod: 'CASH' | 'QRIS';
+  queueNumber?: number;
   cashReceived?: number;
   change?: number;
 }
@@ -93,6 +94,19 @@ function buildReceipt(data: PrintReceiptData): Uint8Array {
   });
   addText(`Tgl: ${dateStr} ${timeStr}`);
   addText(`Plg: ${data.customerName}`);
+
+  // Nomor Antrian
+  if (data.queueNumber && data.queueNumber > 0) {
+    addText('');
+    add(...CMD.CENTER);
+    add(...CMD.BOLD_ON);
+    add(...CMD.DOUBLE_SIZE);
+    addText(`No: ${String(data.queueNumber).padStart(2, '0')}`);
+    add(...CMD.NORMAL_SIZE);
+    add(...CMD.BOLD_OFF);
+    add(...CMD.LEFT);
+  }
+
   addText(separator('-'));
 
   // Items

@@ -11,6 +11,7 @@ interface PaymentModalProps {
   cartItems: CartItem[];
   customerName: string;
   total: number;
+  queueNumber: number;
   onConfirm: (method: 'CASH' | 'QRIS') => Promise<void>;
   onClose: () => void;
 }
@@ -19,6 +20,7 @@ export default function PaymentModal({
   cartItems,
   customerName,
   total,
+  queueNumber,
   onConfirm,
   onClose,
 }: PaymentModalProps) {
@@ -57,6 +59,7 @@ export default function PaymentModal({
       })),
       total,
       paymentMethod: method,
+      queueNumber,
       cashReceived: method === 'CASH' ? Number(cashReceived) : undefined,
       change: method === 'CASH' ? change : undefined,
     });
@@ -76,6 +79,15 @@ export default function PaymentModal({
               <CheckCircle className="w-10 h-10 text-emerald-400" />
             </div>
             <h3 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Pembayaran Berhasil!</h3>
+            
+            {/* Nomor Antrian */}
+            {queueNumber > 0 && (
+              <div className="mt-3 mb-2">
+                <p className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Nomor Antrian</p>
+                <p className="text-5xl font-black text-orange-400 leading-tight">{String(queueNumber).padStart(2, '0')}</p>
+              </div>
+            )}
+
             {method === 'CASH' && change > 0 && (
               <p className="mt-2 text-sm" style={{ color: 'var(--text-muted)' }}>
                 Kembalian:{' '}
@@ -125,6 +137,9 @@ export default function PaymentModal({
           <div className="mb-2 uppercase">
             <p>Tgl: {new Date().toLocaleString('id-ID')}</p>
             <p>Plg: {customerName}</p>
+            {queueNumber > 0 && (
+              <p className="text-center font-bold text-lg mt-1">ANTRIAN: {String(queueNumber).padStart(2, '0')}</p>
+            )}
           </div>
           <p>--------------------------------</p>
           <div className="space-y-1 my-2">

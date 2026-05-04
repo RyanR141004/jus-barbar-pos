@@ -21,6 +21,7 @@ export default function POSPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [customerName, setCustomerName] = useState('');
+  const [queueNumber, setQueueNumber] = useState(0);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -106,9 +107,24 @@ export default function POSPage() {
   const handlePaymentConfirm = async (method: 'CASH' | 'QRIS') => {
     setIsProcessing(true);
 
+    // Hitung nomor antrian hari ini
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const { count } = await supabase
+      .from('transactions')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', todayStart.toISOString());
+    const newQueueNumber = (count ?? 0) + 1;
+    setQueueNumber(newQueueNumber);
+
     const { data: transaction, error: trxError } = await supabase
       .from('transactions')
-      .insert({ total_price: total, payment_method: method, customer_name: customerName })
+      .insert({
+        total_price: total,
+        payment_method: method,
+        customer_name: customerName,
+        queue_number: newQueueNumber,
+      })
       .select()
       .single();
 
@@ -313,6 +329,7 @@ export default function POSPage() {
           cartItems={cartItems}
           customerName={customerName}
           total={total}
+          queueNumber={queueNumber}
           onConfirm={handlePaymentConfirm}
           onClose={handlePaymentClose}
         />
