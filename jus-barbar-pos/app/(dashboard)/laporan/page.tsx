@@ -15,7 +15,7 @@ import {
 } from 'recharts';
 import { TrendingUp, ShoppingBag, Award, RefreshCw, Calendar, Download, Banknote, QrCode } from 'lucide-react';
 
-type Period = '7' | '14' | '30';
+type Period = '1' | '7' | '14' | '30';
 type MethodFilter = 'ALL' | 'CASH' | 'QRIS';
 
 interface ChartDay {
@@ -138,6 +138,7 @@ export default function LaporanPage() {
   const avgPerDay = activeDays > 0 ? totalRevenue / activeDays : 0;
 
   const periodLabels: Record<Period, string> = {
+    '1': 'Hari Ini',
     '7': '7 Hari Terakhir',
     '14': '14 Hari Terakhir',
     '30': '30 Hari Terakhir',
@@ -190,7 +191,7 @@ export default function LaporanPage() {
         <div className="flex flex-wrap gap-2">
           {/* Period Selector */}
           <div className="flex items-center gap-1 rounded-xl p-1" style={{ backgroundColor: 'var(--bg-hover)' }}>
-            {(['7', '14', '30'] as Period[]).map((p) => (
+            {(['1', '7', '14', '30'] as Period[]).map((p) => (
               <button
                 key={p}
                 id={`filter-period-${p}`}
@@ -206,7 +207,7 @@ export default function LaporanPage() {
                     : {}
                 }
               >
-                {p}H
+                {p === '1' ? 'Hari Ini' : `${p}H`}
               </button>
             ))}
           </div>
