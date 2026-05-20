@@ -18,7 +18,7 @@ export type Transaction = {
   id: string;
   customer_name: string;
   total_price: number;
-  payment_method: 'CASH' | 'QRIS';
+  payment_method: 'CASH' | 'QRIS' | 'OJOL';
   created_at: string;
   transaction_items?: TransactionItem[];
 };

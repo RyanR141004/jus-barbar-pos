@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Banknote, QrCode, CheckCircle, Loader2, Printer } from 'lucide-react';
+import { X, Banknote, QrCode, CheckCircle, Loader2, Printer, Bike } from 'lucide-react';
 import Image from 'next/image';
 import { formatRupiah } from '@/lib/utils';
 import { printReceipt } from '@/lib/bluetooth-printer';
@@ -12,7 +12,7 @@ interface PaymentModalProps {
   customerName: string;
   total: number;
   queueNumber: number;
-  onConfirm: (method: 'CASH' | 'QRIS') => Promise<void>;
+  onConfirm: (method: 'CASH' | 'QRIS' | 'OJOL') => Promise<void>;
   onClose: () => void;
 }
 
@@ -24,7 +24,7 @@ export default function PaymentModal({
   onConfirm,
   onClose,
 }: PaymentModalProps) {
-  const [method, setMethod] = useState<'CASH' | 'QRIS' | null>(null);
+  const [method, setMethod] = useState<'CASH' | 'QRIS' | 'OJOL' | null>(null);
   const [cashReceived, setCashReceived] = useState('');
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -230,7 +230,7 @@ export default function PaymentModal({
           {/* Method selection */}
           <div>
             <p className="label">Metode Pembayaran</p>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <button
                 id="btn-pay-cash"
                 onClick={() => setMethod('CASH')}
@@ -273,6 +273,28 @@ export default function PaymentModal({
                   style={{ color: method === 'QRIS' ? 'var(--text-primary)' : 'var(--text-secondary)' }}
                 >
                   QRIS
+                </span>
+              </button>
+              <button
+                id="btn-pay-ojol"
+                onClick={() => setMethod('OJOL')}
+                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                  method === 'OJOL'
+                    ? 'border-orange-500 bg-orange-500/10'
+                    : ''
+                }`}
+                style={
+                  method !== 'OJOL'
+                    ? { borderColor: 'var(--bg-input-border)', backgroundColor: 'var(--bg-input)' }
+                    : {}
+                }
+              >
+                <Bike className={`w-6 h-6 ${method === 'OJOL' ? 'text-orange-400' : ''}`} style={method !== 'OJOL' ? { color: 'var(--text-muted)' } : {}} />
+                <span
+                  className="font-semibold text-sm"
+                  style={{ color: method === 'OJOL' ? 'var(--text-primary)' : 'var(--text-secondary)' }}
+                >
+                  Ojol
                 </span>
               </button>
             </div>

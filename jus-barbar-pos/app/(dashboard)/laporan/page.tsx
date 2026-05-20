@@ -13,10 +13,10 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
-import { TrendingUp, ShoppingBag, Award, RefreshCw, Calendar, Download, Banknote, QrCode } from 'lucide-react';
+import { TrendingUp, ShoppingBag, Award, RefreshCw, Calendar, Download, Banknote, QrCode, Bike } from 'lucide-react';
 
 type Period = '1' | '7' | '14' | '30';
-type MethodFilter = 'ALL' | 'CASH' | 'QRIS';
+type MethodFilter = 'ALL' | 'CASH' | 'QRIS' | 'OJOL';
 
 interface ChartDay {
   date: string;
@@ -24,8 +24,10 @@ interface ChartDay {
   count: number;
   cash: number;
   qris: number;
+  ojol: number;
   cashCount: number;
   qrisCount: number;
+  ojolCount: number;
 }
 
 // Custom recharts tooltip
@@ -45,6 +47,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
         <div className="flex gap-3 mt-1">
           <p className="text-xs text-emerald-400">💵 Tunai: {formatRupiah(data.cash)}</p>
           <p className="text-xs text-blue-400">📱 QRIS: {formatRupiah(data.qris)}</p>
+          <p className="text-xs text-amber-400">🛵 Ojol: {formatRupiah(data.ojol)}</p>
         </div>
         <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>{data.count} transaksi</p>
       </div>
@@ -131,9 +134,11 @@ export default function LaporanPage() {
   const totalRevenue = chartData.reduce((sum, d) => sum + d.total, 0);
   const totalCash = chartData.reduce((sum, d) => sum + d.cash, 0);
   const totalQris = chartData.reduce((sum, d) => sum + d.qris, 0);
+  const totalOjol = chartData.reduce((sum, d) => sum + d.ojol, 0);
   const totalTransactions = chartData.reduce((sum, d) => sum + d.count, 0);
   const totalCashCount = chartData.reduce((sum, d) => sum + d.cashCount, 0);
   const totalQrisCount = chartData.reduce((sum, d) => sum + d.qrisCount, 0);
+  const totalOjolCount = chartData.reduce((sum, d) => sum + d.ojolCount, 0);
   const activeDays = chartData.filter((d) => d.total > 0).length;
   const avgPerDay = activeDays > 0 ? totalRevenue / activeDays : 0;
 
@@ -146,22 +151,24 @@ export default function LaporanPage() {
 
   // Export to Excel (CSV)
   const handleExport = () => {
-    const headers = ['Tanggal', 'Total Omzet', 'Tunai', 'QRIS', 'Jumlah Transaksi', 'Transaksi Tunai', 'Transaksi QRIS'];
+    const headers = ['Tanggal', 'Total Omzet', 'Tunai', 'QRIS', 'Ojol', 'Jumlah Transaksi', 'Transaksi Tunai', 'Transaksi QRIS', 'Transaksi Ojol'];
     const rows = chartData.map((d) => [
       d.date,
       d.total,
       d.cash,
       d.qris,
+      d.ojol,
       d.count,
       d.cashCount,
       d.qrisCount,
+      d.ojolCount,
     ]);
 
     // Add summary row
     rows.push([]);
-    rows.push(['RINGKASAN', '', '', '', '', '', '']);
-    rows.push(['Total Omzet', totalRevenue, totalCash, totalQris, totalTransactions, totalCashCount, totalQrisCount]);
-    rows.push(['Rata-rata/Hari', Math.round(avgPerDay), '', '', '', '', '']);
+    rows.push(['RINGKASAN', '', '', '', '', '', '', '', '']);
+    rows.push(['Total Omzet', totalRevenue, totalCash, totalQris, totalOjol, totalTransactions, totalCashCount, totalQrisCount, totalOjolCount]);
+    rows.push(['Rata-rata/Hari', Math.round(avgPerDay), '', '', '', '', '', '', '']);
 
     const csvContent = [
       headers.join(','),
@@ -231,6 +238,7 @@ export default function LaporanPage() {
           { key: 'ALL' as MethodFilter, label: 'Semua', icon: null },
           { key: 'CASH' as MethodFilter, label: 'Tunai', icon: Banknote },
           { key: 'QRIS' as MethodFilter, label: 'QRIS', icon: QrCode },
+          { key: 'OJOL' as MethodFilter, label: 'Ojol', icon: Bike },
         ]).map(({ key, label, icon: Icon }) => (
           <button
             key={key}
@@ -253,7 +261,7 @@ export default function LaporanPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <div className="stat-card">
           <div className="flex items-center justify-between">
             <span className="text-sm" style={{ color: 'var(--text-muted)' }}>Total Omzet</span>
@@ -277,6 +285,14 @@ export default function LaporanPage() {
           </div>
           <p className="text-xl font-bold text-blue-400">{formatRupiah(totalQris)}</p>
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{totalQrisCount} transaksi QRIS</p>
+        </div>
+        <div className="stat-card">
+          <div className="flex items-center justify-between">
+            <span className="text-sm" style={{ color: 'var(--text-muted)' }}>Omzet Ojol</span>
+            <Bike className="w-4 h-4 text-amber-400" />
+          </div>
+          <p className="text-xl font-bold text-amber-400">{formatRupiah(totalOjol)}</p>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{totalOjolCount} transaksi ojol</p>
         </div>
         <div className="stat-card">
           <div className="flex items-center justify-between">
@@ -317,6 +333,7 @@ export default function LaporanPage() {
                 formatter={(value: string) => {
                   if (value === 'cash') return 'Tunai';
                   if (value === 'qris') return 'QRIS';
+                  if (value === 'ojol') return 'Ojol';
                   return value;
                 }}
               />
@@ -331,10 +348,18 @@ export default function LaporanPage() {
               <Bar
                 dataKey="qris"
                 fill="#3b82f6"
-                radius={[6, 6, 0, 0]}
+                radius={[0, 0, 0, 0]}
                 maxBarSize={48}
                 stackId="payment"
                 name="qris"
+              />
+              <Bar
+                dataKey="ojol"
+                fill="#f59e0b"
+                radius={[6, 6, 0, 0]}
+                maxBarSize={48}
+                stackId="payment"
+                name="ojol"
               />
             </BarChart>
           </ResponsiveContainer>

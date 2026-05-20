@@ -54,7 +54,7 @@ export interface PrintReceiptData {
   customerName: string;
   items: { name: string; qty: number; price: number; subtotal: number; notes?: string }[];
   total: number;
-  paymentMethod: 'CASH' | 'QRIS';
+  paymentMethod: 'CASH' | 'QRIS' | 'OJOL';
   queueNumber?: number;
   cashReceived?: number;
   change?: number;

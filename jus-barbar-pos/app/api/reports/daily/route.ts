@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     .order('created_at', { ascending: true });
 
   // Filter by payment method if specified
-  if (paymentMethod === 'CASH' || paymentMethod === 'QRIS') {
+  if (paymentMethod === 'CASH' || paymentMethod === 'QRIS' || paymentMethod === 'OJOL') {
     query = query.eq('payment_method', paymentMethod);
   }
 
@@ -31,14 +31,14 @@ export async function GET(request: Request) {
   }
 
   // Group by date
-  const grouped: Record<string, { total: number; count: number; cash: number; qris: number; cashCount: number; qrisCount: number }> = {};
+  const grouped: Record<string, { total: number; count: number; cash: number; qris: number; ojol: number; cashCount: number; qrisCount: number; ojolCount: number }> = {};
 
   // Initialize all days with 0
   for (let i = 0; i < days; i++) {
     const d = new Date();
     d.setDate(d.getDate() - (days - 1 - i));
     const key = d.toISOString().split('T')[0];
-    grouped[key] = { total: 0, count: 0, cash: 0, qris: 0, cashCount: 0, qrisCount: 0 };
+    grouped[key] = { total: 0, count: 0, cash: 0, qris: 0, ojol: 0, cashCount: 0, qrisCount: 0, ojolCount: 0 };
   }
 
   // Fill with actual data
@@ -53,6 +53,9 @@ export async function GET(request: Request) {
       } else if (trx.payment_method === 'QRIS') {
         grouped[key].qris += trx.total_price;
         grouped[key].qrisCount += 1;
+      } else if (trx.payment_method === 'OJOL') {
+        grouped[key].ojol += trx.total_price;
+        grouped[key].ojolCount += 1;
       }
     }
   });

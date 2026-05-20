@@ -104,7 +104,7 @@ export default function POSPage() {
     0
   );
 
-  const handlePaymentConfirm = async (method: 'CASH' | 'QRIS') => {
+  const handlePaymentConfirm = async (method: 'CASH' | 'QRIS' | 'OJOL') => {
     setIsProcessing(true);
 
     // Hitung nomor antrian hari ini
